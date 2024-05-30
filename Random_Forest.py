@@ -4,12 +4,31 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import precision_score, recall_score, f1_score
 import warnings
 import numpy as np
 # Suppress FutureWarnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Your code here
+def evaluate_preds(y_true, y_preds):
+    """
+    Perform evaluation comparison on y_true labels vs. y_pred labels on a classification
+    """
+    accuracy = accuracy_score(y_true, y_preds)
+    precision = precision_score(y_true, y_preds)
+    recall = recall_score(y_true, y_preds)
+    f1 = f1_score(y_true, y_preds)
+    metric_dict = {'accuracy': round(accuracy, 2),
+                  'precision': round(precision, 2),
+                  'recall': round(recall, 2),
+                  'f1': round(f1, 2)}
+    print(f'Acc: {accuracy * 100:.2f}%')
+    print(f'Precision: {precision:.2f}%')
+    print(f'Recall: {recall:.2f}%')
+    print(f'F1 score: {f1:.2f}%')
+    
+    return metric_dict
 
 # Load your data into a pandas DataFrame
 data = pd.read_csv("test_data.csv")
@@ -56,6 +75,8 @@ print("Average accuracy:", np.mean(cv_scores))
 # Predict on the test set
 y_pred = rf_classifier.predict(X_test_processed)
 
+evaluate_preds(y_test, y_pred)
 # Evaluate the model
 accuracy = accuracy_score(y_test, y_pred)
 ##print("Accuracy:", accuracy)
+
